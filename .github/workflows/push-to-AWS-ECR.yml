@@ -46,7 +46,7 @@ jobs:
           
           # Docker build command for Webapp
           docker build -f $WEBAPP_DOCKERFILE -t $ECR_REGISTRY/$ECR_REPOSITORY:$WEBAPP_IMAGE .
-          # Unit test for Webapp
+          # Unit test for Webapp  
           docker run -p 8080:8080 --name blue -e DBHOST=172.17.0.2 -e DBPORT=3306 -e DBUSER=root -e DBPWD=password123 -e APP_COLOR=blue -d $ECR_REGISTRY/$ECR_REPOSITORY:$WEBAPP_IMAGE
           docker ps
           echo "Pause for 10 seconds to let container start"
