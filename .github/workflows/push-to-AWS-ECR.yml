@@ -52,5 +52,5 @@ jobs:
           echo "Pause for 10 seconds to let container start"
           sleep 10
           curl http://172.17.0.3:8080 -vvv
-          # Push Webapp image to AWS ECR 
+          # Push Webapp image to AWS ECR   
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$WEBAPP_IMAGE
