@@ -1,4 +1,4 @@
-name: Build and push image to AWS ECR
+name: Build,test and push image to AWS ECR
 
 # Controls when the workflow will run
 on:
@@ -7,7 +7,6 @@ on:
     branches: [ "master" ]
 
 jobs:
-  # This workflow contains a single job called "build"
   build:
     name: Build Image
     runs-on: ubuntu-latest
@@ -42,20 +41,16 @@ jobs:
           docker ps
           echo "Pause for 10 seconds to let container start"
           sleep 10
-          # Push image to AWS ECR
+          # Push Mysql image to AWS ECR
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$MYSQL_IMAGE
           
           # Docker build command for Webapp
           docker build -f $WEBAPP_DOCKERFILE -t $ECR_REGISTRY/$ECR_REPOSITORY:$WEBAPP_IMAGE .
           # Unit test for Webapp
-          # Get IP of Mysql container
-          echo $MYSQLIP `docker inspect --format='{{range .NetworkSettings.Networks}}{{println .IPAddress}}{{end}}' mysqldb`
           docker run -p 8080:8080 --name blue -e DBHOST=172.17.0.2 -e DBPORT=3306 -e DBUSER=root -e DBPWD=password123 -e APP_COLOR=blue -d $ECR_REGISTRY/$ECR_REPOSITORY:$WEBAPP_IMAGE
           docker ps
           echo "Pause for 10 seconds to let container start"
           sleep 10
-          # Get IP of Webapp container
-          #echo $WEBAPPIP `docker inspect --format='{{range .NetworkSettings.Networks}}{{println .IPAddress}}{{end}}' blue`
           curl http://172.17.0.3:8080 -vvv
-          # Push image to AWS ECR 
+          # Push Webapp image to AWS ECR 
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$WEBAPP_IMAGE
