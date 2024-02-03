@@ -56,6 +56,6 @@ jobs:
           sleep 10
           # Get IP of Webapp container
           echo $WEBAPPIP `docker inspect --format='{{range .NetworkSettings.Networks}}{{println .IPAddress}}{{end}}' blue`
-          curl http://$WEBAPPIP:8080 -vvv
+          curl $WEBAPPIP:8080 -vvv
           # Push image to AWS ECR 
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$WEBAPP_IMAGE
