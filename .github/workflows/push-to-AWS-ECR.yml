@@ -50,10 +50,12 @@ jobs:
           # Unit test for Webapp
           # Get IP of Mysql container
           echo $MYSQLIP `docker inspect --format='{{range .NetworkSettings.Networks}}{{println .IPAddress}}{{end}}' mysqldb`
-          docker run -p 8080:8080 -e DBHOST=$MYSQLIP -e DBPORT=3306 -e DBUSER=root -e DBPWD=password123 -e APP_COLOR=blue -d $ECR_REGISTRY/$ECR_REPOSITORY:$WEBAPP_IMAGE
+          docker run -p 8080:8080 --name blue -e DBHOST=$MYSQLIP -e DBPORT=3306 -e DBUSER=root -e DBPWD=password123 -e APP_COLOR=blue -d $ECR_REGISTRY/$ECR_REPOSITORY:$WEBAPP_IMAGE
           docker ps
           echo "Pause for 10 seconds to let container start"
           sleep 10
-          curl localhost:8080 -vvv
+          # Get IP of Webapp container
+          echo $WEBAPPIP `docker inspect --format='{{range .NetworkSettings.Networks}}{{println .IPAddress}}{{end}}' blue`
+          curl http://$WEBAPPIP:8080 -vvv
           # Push image to AWS ECR 
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$WEBAPP_IMAGE
