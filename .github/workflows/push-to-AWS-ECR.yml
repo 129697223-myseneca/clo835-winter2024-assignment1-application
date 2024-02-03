@@ -48,10 +48,10 @@ jobs:
           # Docker build command for Webapp
           docker build -f $WEBAPP_DOCKERFILE -t $ECR_REGISTRY/$ECR_REPOSITORY:$WEBAPP_IMAGE .
           # Unit test for Webapp
-          docker run -p 8080:8080 -e DBHOST=127.0.0.1 -e DBPORT=3306 -e DBUSER=root  -e DBPWD=password123 -e APP_COLOR=blue -d $ECR_REGISTRY/$ECR_REPOSITORY:$WEBAPP_IMAGE
+          docker run -p 8080:8080 -e DBHOST=localhost -e DBPORT=3306 -e DBUSER=root  -e DBPWD=password123 -e APP_COLOR=blue -d $ECR_REGISTRY/$ECR_REPOSITORY:$WEBAPP_IMAGE
           docker ps
           echo "Pause for 10 seconds to let container start"
           sleep 10
-          curl localhost -vvv
+          curl localhost:8080 -vvv
           # Push image to AWS ECR
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$MYSQL_IMAGE
