@@ -55,5 +55,5 @@ jobs:
           echo "Pause for 10 seconds to let container start"
           sleep 10
           curl localhost:8080 -vvv
-          # Push image to AWS ECR
+          # Push image to AWS ECR 
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$WEBAPP_IMAGE
